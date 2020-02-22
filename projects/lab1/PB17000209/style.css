@@ -1,0 +1,81 @@
+body {
+    margin : 0px;
+}
+
+.head {
+    width : 1140px;
+    height : 40px;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.10);
+    background-color: #97A5BC;
+    padding: 15px 30px;
+}
+
+.button{
+    margin: 0px 10px;
+    border-radius: 5px;
+    padding: 9px;
+    font-size: 16px;
+    color: #FFFFFF;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.10);
+    border: none;
+}
+
+.blueBtn{
+    background-color: #2188E9;
+}
+
+.redBtn{
+    background-color: #DD2E1D;
+    float: right;
+}
+
+.yellowBtn{
+    background-color: #FFB020;
+    float: right;
+}
+
+.time{
+    font-weight: bold;
+    font-size: 200px;
+    margin: 0.5em 0;
+}
+
+.clockDiv{
+    background-color: #F2F4F7;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.10);
+    padding: 15px 30px;
+    width : 1140px;
+    text-align: center;
+}
+
+.inputDiv{
+    margin: 0px 10px;
+    padding: 9px;
+    width: 52px;
+    height: 22px;
+    font-size: 16px;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.10);
+    border-radius: 5px;
+    border: none;
+    background-color: #FFFFFF;
+    display: inline-block;
+}
+
+.inputBox{
+    width: 32px;
+    height: 22px;
+    border: none;
+    color: #AFAFAF;
+}
+
+.inputText{
+    margin: 0; 
+    float: right;
+}
+
+.infoText{
+    margin: 0px;
+    font-size: 16px;
+    display: inline-block;
+    color: #FFFFFF;
+}

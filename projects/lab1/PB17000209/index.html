@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>计时器</title>
+</head>
+
+<body>
+    <div class="head" id="header">
+        <div style="display: inline-block;" id="input_block">
+            <div class="inputDiv">
+                <input type="text" id="input_hour" value="0" class="inputBox">
+                <p class="inputText">时</p>
+            </div>
+            <div class="inputDiv">
+                <input type="text" id="input_minute" value="0" class="inputBox">
+                <p class="inputText">分</p>
+            </div>
+            <div class="inputDiv">
+                <input type="text" id="input_second" value="0" class="inputBox">
+                <p class="inputText">秒</p>
+            </div>
+        </div>
+        <p class="infoText" id="time_info" style="display: none;">test</p>
+        <input type="button" id="up_start_timing" value="开始正计时" class="button blueBtn">
+        <input type="button" id="down_start_timing" value="开始倒计时" class="button blueBtn">
+        <input type="button" id="pause_timing" value="暂停计时器" class="button blueBtn" hidden="hidden">
+        <input type="button" id="resume_timing" value="恢复计时器" , class="button blueBtn" hidden="hidden">
+        <input type="button" id="restart_timing" value="重新再计时" , class="button yellowBtn" hidden="hidden">
+        <input type="button" id="clear_timing" value="清空计时器" , class="button redBtn" hidden="hidden">
+    </div>
+    <div id="content" class="clockDiv">
+        <p id="clock" style="margin:0.5em 0" class="time">00:00:00</p>
+        <script>
+            var timeInfo = document.getElementById("time_info");
+            var inputBlk = document.getElementById("input_block");
+            var upStartBtn = document.getElementById("up_start_timing");
+            var downStartBtn = document.getElementById("down_start_timing");
+            var pauseBtn = document.getElementById("pause_timing");
+            var clearBtn = document.getElementById("clear_timing");
+            var resumeBtn = document.getElementById("resume_timing");
+            var restartBtn = document.getElementById("restart_timing");
+            var hour = 0, minute = 0, second = 0, ms = 0;
+            var clock = document.getElementById("clock");
+            var timeObj = null;
+            var strHour, strMinute, strSecond;
+            var isDownTiming = new Boolean();
+            var inputHour = document.getElementById("input_hour");
+            var inputMinute = document.getElementById("input_minute");
+            var inputSecond = document.getElementById("input_second");
+            var limitStr, limitHour, limitMinute, limitSecond;
+            inputHour.oninput = inputMinute.oninput = inputSecond.oninput = showTextTime;
+            // Show while changing text
+            function showTextTime() {
+                if (timeObj == null) {
+                    getInputInfo();
+                    printToClock();
+                }
+                // alert("Changing text");
+            }
+            // Count up: 
+            upStartBtn.onclick = function () {
+                if (timeObj == null) {
+                    hour = minute = second = ms = 0;
+                    printToClock();
+                    isDownTiming = false;
+                    hideObj("down_start_timing");
+                    hideObj("up_start_timing");
+                    hideObj("resume_timing");
+                    showObj("pause_timing");
+                    showObj("clear_timing");
+                    showObj("restart_timing");
+                    inputBlk.style = "display: none;";
+                    timeInfo.innerText = "正在正计时";
+                    timeInfo.style = "";
+                    timeObj = setInterval(upTiming, 100);
+                }
+            }
+            // Count down: 
+            downStartBtn.onclick = function () {
+                if (timeObj == null) {
+                    /* Get input info: */
+                    getInputInfo();
+                    printToClock();
+                    limitStr = clockStr;
+                    isDownTiming = true;
+                    hideObj("down_start_timing");
+                    hideObj("up_start_timing");
+                    hideObj("resume_timing");
+                    showObj("pause_timing");
+                    showObj("clear_timing");
+                    showObj("restart_timing");
+                    inputBlk.style = "display: none;";
+                    //alert("正在倒计时 " + limitStr);
+                    timeInfo.innerText = "正在倒计时 " + limitStr;
+                    timeInfo.style = "";
+
+                    timeObj = setInterval(downTiming, 100);
+                }
+            }
+
+            clearBtn.onclick = function () {
+                if (timeObj != null) {
+                    clearInterval(timeObj);
+                    timeObj = null;
+                }
+                showObj("down_start_timing");
+                showObj("up_start_timing");
+                hideObj("resume_timing");
+                hideObj("pause_timing");
+                hideObj("clear_timing");
+                hideObj("restart_timing");
+                inputBlk.style = "display: inline-block;";
+                timeInfo.style = "display: none;";
+                hideObj("time_info");
+                hour = minute = second = ms = 0;
+                printToClock();
+
+            }
+
+            resumeBtn.onclick = function () {
+                if (timeObj == null) {
+                    hideObj("down_start_timing");
+                    hideObj("up_start_timing");
+                    hideObj("resume_timing");
+                    showObj("pause_timing");
+                    showObj("clear_timing");
+                    showObj("restart_timing");
+                    inputBlk.style = "display: none;";
+                    timeInfo.style = "";
+                    if (isDownTiming)
+                        timeInfo.innerText = "正在倒计时 " + limitStr;
+                    else
+                        timeInfo.innerText = "正在正计时";
+                    if (isDownTiming)
+                        timeObj = setInterval(downTiming, 100);
+                    else
+                        timeObj = setInterval(upTiming, 100);
+                }
+            }
+
+            pauseBtn.onclick = function () {
+                if (timeObj != null) {
+                    // alert(isDownTiming);
+                    hideObj("down_start_timing");
+                    hideObj("up_start_timing");
+                    showObj("resume_timing");
+                    hideObj("pause_timing");
+                    showObj("clear_timing");
+                    showObj("restart_timing");
+                    inputBlk.style = "display: none;";
+                    timeInfo.style = "";
+                    if (isDownTiming)
+                        timeInfo.innerText = "暂停倒计时 " + limitStr;
+                    else
+                        timeInfo.innerText = "暂停正计时";
+                    clearInterval(timeObj);
+                    timeObj = null;
+                }
+            }
+
+            restartBtn.onclick = function () {
+                if (timeObj != null) {
+                    clearInterval(timeObj);
+                    timeObj = null;
+                }
+                hideObj("down_start_timing");
+                hideObj("up_start_timing");
+                hideObj("resume_timing");
+                showObj("pause_timing");
+                showObj("clear_timing");
+                showObj("restart_timing");
+                inputBlk.style = "display: none;";
+                timeInfo.style = "";
+                if (!isDownTiming)
+                    hour = minute = second = ms = 0;
+                else {
+                    hour = limitHour;
+                    minute = limitMinute;
+                    second = limitSecond;
+                    ms = 0;
+                    timeInfo.innerText = "正在倒计时 " + limitStr;
+                }
+                printToClock();
+                if (isDownTiming)
+                    timeObj = setInterval(downTiming, 100);
+                else
+                    timeObj = setInterval(upTiming, 100);
+            }
+
+            /* Hide obj which id is id. */
+            function hideObj(id) {
+                document.getElementById(id).setAttribute("hidden", "hidden");
+            }
+
+            /* Show obj which id is id. */
+            function showObj(id) {
+                document.getElementById(id).removeAttribute("hidden");
+            }
+
+            function getInputInfo() {
+                hour = Number(inputHour.value);
+                if (isNaN(hour)) hour = 0;
+                if (hour > 23)
+                    hour = 23;
+                else if (hour < 0)
+                    hour = 0;
+                inputHour.value = limitHour = hour;
+
+                minute = Number(inputMinute.value);
+                if (isNaN(minute)) minute = 0;
+                if (minute > 59)
+                    minute = 59;
+                else if (minute < 0)
+                    minute = 0;
+                inputMinute.value = limitMinute = minute;
+
+                second = Number(inputSecond.value);
+                if (isNaN(second)) second = 0;
+                if (second > 59)
+                    second = 59;
+                else if (second < 0)
+                    second = 0;
+                inputSecond.value = limitSecond = second;
+                ms = 0;
+            }
+
+            function upTiming() {
+                ms += 100;
+                if (ms > 999) {
+                    ms = 0;
+                    second++;
+                }
+                if (second > 59) {
+                    second = 0;
+                    minute++;
+                }
+                if (minute > 59) {
+                    minute = 0;
+                    hour++;
+                }
+                printToClock();
+            }
+
+            function downTiming() {
+                if (second == 0 && minute == 0 && hour == 0 && ms == 0) {
+                    clearInterval(timeObj);
+                    timeInfo.innerText = "倒计时 " + limitStr + " 已结束";
+                    printToClock();
+                    return;
+                }
+                ms -= 100;
+                if (ms < 0) {
+                    ms = 900;
+                    second--;
+                }
+                if (second < 0) {
+                    second = 59;
+                    minute--;
+                }
+                if (minute < 0) {
+                    minute = 59;
+                    hour--;
+                }
+                printToClock();
+            }
+
+            var clockStr;
+            function printToClock() {
+                strHour = hour.toString();
+                strMinute = minute.toString();
+                strSecond = second.toString();
+                if (strHour < 10) strHour = '0' + strHour;
+                if (strMinute < 10) strMinute = '0' + strMinute;
+                if (strSecond < 10) strSecond = '0' + strSecond;
+                clockStr = strHour + ":" + strMinute + ":" + strSecond;
+                clock.innerHTML = clockStr;
+            }
+        </script>
+
+    </div>
+
+</body>
+
+</html>
