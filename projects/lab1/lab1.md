@@ -44,6 +44,7 @@
     ```shell
     cd projects/lab1
     mkdir grunt
+    cd grunt
     npm install -g grunt-cli
     npm install grunt --save-dev
     npm install grunt-htmllint --save-dev
