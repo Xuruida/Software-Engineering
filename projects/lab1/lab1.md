@@ -1,53 +1,59 @@
-# lab1
+- # lab1
 
-## csslint
+    使用HTML+CSS制作计时器界面
 
-利用csslint检查css风格。
+    ## csslint
 
-### 操作步骤
+    利用csslint检查css风格。
 
-按如下方式操作：
-```shell
-npm install -g csslint
-csslint style.css
-```
+    ### 操作步骤
 
-即可在命令行看到错误信息，再根据错误修改即可。
+    按如下方式操作：
 
-### 常见报错
+    ```shell
+    npm install -g csslint
+    csslint style.css
+    ```
 
-- 0不应当有单位。（*即0px改为0*）
-- height不能和上下padding同时存在；width不能和左右padding同时存在。
-- 每个class中属性应当以字典序排序。
+    即可在命令行看到错误信息，再根据错误修改即可。
 
-## htmllint
+    ### 常见报错
 
-利用htmllint检查HTML风格。
+    - 0不应当有单位。（即0px改为0）
+    - height不能和上下padding同时存在；width不能和左右padding同时存在。
+    - 每个class中属性应当以字典序排序。
 
-贴一个好懂一点的链接：\[点我看grunt实例](https://my.oschina.net/mdxlcj/blog/1626534)
-grunt入门：\[快速入门](https://www.gruntjs.net/getting-started)
-grunt-htmllint：\[npm上的grunt-htmlllint](https://www.npmjs.com/package/grunt-htmllint)
+    ## htmllint
 
-### 操作步骤
+    利用htmllint检查HTML风格。
 
-阅读了以上几个网页后，按以下步骤：
+    
 
-* 在仓库根目录下执行：
+    贴一个好懂一点的链接：[点我看grunt实例](https://my.oschina.net/mdxlcj/blog/1626534)
 
-```shell
-cd projects/lab1
-mkdir grunt
-npm install -g grunt-cli
-npm install grunt --save-dev
-npm install grunt-htmllint --save-dev
-```
+    grunt入门：[快速入门](https://www.gruntjs.net/getting-started)
 
-* 添加Gruntfile.js（如仓库中所示）
+    grunt-htmllint：[npm上的grunt-htmlllint](https://www.npmjs.com/package/grunt-htmllint)
 
-* 在目录下执行指令`grunt`，即可在命令行看到错误信息，再根据错误修改即可。
+    ### 操作步骤
 
-### 常见报错
+    阅读了以上几个网页后，按以下步骤：
 
-- 结尾必须是lf（*很扯，但是不得不改*）
-- style必须以下划线形式命名（*很烦*）
-- 其他的小错误 （例如*存在连续的空格等*）
+    - 在仓库根目录下执行：
+
+    ```shell
+    cd projects/lab1
+    mkdir grunt
+    npm install -g grunt-cli
+    npm install grunt --save-dev
+    npm install grunt-htmllint --save-dev
+    ```
+
+    - 添加Gruntfile.js（如仓库中所示）
+    - 在目录下执行指令`grunt`，即可在命令行看到错误信息，再根据错误修改即可。
+
+    ### 常见报错
+
+    - 结尾必须是lf（很扯，但是不得不改）
+    - style必须以下划线形式命名（很烦）
+    - 其他的小错误 （例如：存在连续的空格等）
