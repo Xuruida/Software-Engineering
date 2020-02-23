@@ -25,7 +25,9 @@ csslint style.css
 利用htmllint检查HTML风格。
 
 贴一个好懂一点的链接：[点我看grunt实例](https://my.oschina.net/mdxlcj/blog/1626534)
+
 grunt入门：[快速入门](https://www.gruntjs.net/getting-started)
+
 grunt-htmllint：[npm上的grunt-htmlllint](https://www.npmjs.com/package/grunt-htmllint)
 
 ### 操作步骤
