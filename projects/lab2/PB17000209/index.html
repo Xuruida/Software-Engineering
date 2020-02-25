@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>计时器</title>
+</head>
+
+<body>
+    <div class="head" id="header">
+        <div class="empty_blk"></div>
+        <div id="input_block" class="input_blk">
+            <div class="input_div">
+                <input type="text" id="hour" value="0" class="input_box">
+                <p class="input_text">时</p>
+            </div>
+            <div class="input_div">
+                <input type="text" id="minute" value="0" class="input_box">
+                <p class="input_text">分</p>
+            </div>
+            <div class="input_div">
+                <input type="text" id="second" value="0" class="input_box">
+                <p class="input_text">秒</p>
+            </div>
+        </div>
+        <p class="info_text" id="hint">test</p>
+        <input type="button" id="countup" value="开始正计时" class="button blue_btn">
+        <input type="button" id="countdown" value="开始倒计时" class="button blue_btn">
+        <input type="button" id="pause" value="暂停计时器" class="button blue_btn hidden">
+        <input type="button" id="resume" value="恢复计时器" class="button blue_btn hidden">
+        <div class="empty_blk_right"></div>
+        <input type="button" id="restart" value="重新再计时" class="button yellow_btn hidden">
+        <input type="button" id="clear" value="清空计时器" class="button red_btn hidden">
+    </div>
+    <div id="content" class="clock_div">
+        <p id="time" class="time">00:00:00</p>
+    </div>
+    <script src="./app.js"></script>
+</body>
+
+</html>
