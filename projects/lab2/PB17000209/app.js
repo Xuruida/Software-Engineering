@@ -1,5 +1,4 @@
 let timeInfo = document.getElementById("hint");
-let inputBlk = document.getElementById("input_block");
 let upStartBtn = document.getElementById("countup");
 let downStartBtn = document.getElementById("countdown");
 let pauseBtn = document.getElementById("pause");
@@ -11,7 +10,6 @@ let isFinished = false;
 let isCleared = true;
 let clock = document.getElementById("time");
 let timeObj = null;
-let strHour, strMinute, strSecond;
 let isDownTiming = new Boolean();
 let inputHour = document.getElementById("hour");
 let inputMinute = document.getElementById("minute");
@@ -54,8 +52,8 @@ function changeDisplayAttr(countdown, countup, resume, pause,
 
 // Count up:
 
-document.onkeypress = function pressAnyKey(event) {
-    var event = event || window.event;
+document.onkeypress = function pressAnyKey(e) {
+    var event = e || window.event;
     switch (event.keyCode) {
         case 13:
             if (isCleared)
