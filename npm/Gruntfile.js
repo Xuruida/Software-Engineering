@@ -8,7 +8,7 @@ module.exports = function (grunt) {
                     /* htmllint options go here */
                 },
                 src: [
-                    '../projects/lab1/PB17000209/index.html'
+                    '../projects/lab2/PB17000209/index.html'
                 ]
             }
         },

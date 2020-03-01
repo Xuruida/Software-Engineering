@@ -1,12 +1,14 @@
 {
-  "name": "lab1_check",
+  "name": "lab2_check",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "echo Running HTMLLint && grunt && echo Running CSSLint && csslint ../projects/lab2/PB17000209/style.css && echo Running ESLint && eslint ../projects/lab2/PB17000209/app.js -c .eslintrc.js && echo Running stylelint && stylelint ../projects/lab2/PB17000209/style.css"
   },
   "author": "",
   "devDependencies": {
+    "csslint": "1.0.5",
     "eslint": "6.8.0",
     "grunt": "^1.0.2",
     "grunt-htmllint": "0.3.0",
