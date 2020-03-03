@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "echo Running HTMLLint && grunt && echo Running CSSLint && csslint ../projects/lab2/PB17000209/style.css && echo Running ESLint && eslint ../projects/lab2/PB17000209/app.js -c .eslintrc.js && echo Running stylelint && stylelint ../projects/lab2/PB17000209/style.css"
+    "lint-lab1": "echo Running HTMLLint && grunt lab1 && echo Running CSSLint && csslint ../projects/lab1/PB17000209/style.css && echo Running StyleLint && stylelint ../projects/lab1/PB17000209/style.css",
+    "lint-lab2": "echo Running HTMLLint && grunt lab2 && echo Running CSSLint && csslint ../projects/lab2/PB17000209/style.css && echo Running ESLint && eslint ../projects/lab2/PB17000209/app.js -c .eslintrc.js && echo Running StyleLint && stylelint ../projects/lab2/PB17000209/style.css"
   },
   "author": "",
   "devDependencies": {
