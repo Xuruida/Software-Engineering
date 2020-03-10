@@ -1,0 +1,28 @@
+{
+  "name": "software-engineering",
+  "version": "1.0.0",
+  "description": "Xuruida's repo of USTC 2020 Spring SE course.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xuruida/Software-Engineering.git"
+  },
+  "author": "Xu Ruida",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xuruida/Software-Engineering/issues"
+  },
+  "homepage": "https://github.com/Xuruida/Software-Engineering#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
