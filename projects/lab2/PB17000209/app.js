@@ -9,9 +9,15 @@ const ZERO = 0;
 const MAX_MINUTE = 59;
 const MAX_SECOND = 59;
 const MAX_HOUR = 99;
-const MAX_MS = 900;
-const INTERVAL = 53;
+const INTERVAL = 50;
 const TEN = 10;
+const ONE = 1;
+const TWO = 2;
+const THREE = 3;
+const ARR_SIZE = 4;
+const MINUTE_PER_HOUR = 60;
+const SECOND_PER_MINUTE = 60;
+const MS_PER_SECOND = 1000;
 let hour = ZERO, minute = ZERO, second = ZERO, ms = ZERO;
 let isFinished = false;
 let isCleared = true;
@@ -107,7 +113,7 @@ function countdownBtnClick () {
             updateTime();
             timeObj = setInterval(updateTime, INTERVAL);
         }
-        , 1);
+        , ONE);
     }
 }
 
@@ -132,7 +138,8 @@ function resumeBtnClick () {
         if (isDownTiming)
             {tmpStr = "正在倒计时 " + limitStr;}
         else
-            {tmpStr = "正在正计时 " + limitStr;}
+            { tmpStr = "正在正计时 " + limitStr; }
+        updateTime();
         changeDisplayAttr(false, false, false, true, true, true, false, true, tmpStr);
         if (isDownTiming)
             {timeObj = setInterval(updateTime, INTERVAL);}
@@ -174,7 +181,7 @@ function restartBtnClick () {
         setTimeout(() => {
             updateTime();
             timeObj = setInterval(updateTime, INTERVAL);
-        }, 1);
+        }, ONE);
     }
     else {
         hour = minute = second = ms = ZERO;
@@ -228,62 +235,62 @@ function getInputInfo () {
     if (strMinute < TEN) {strMinute = '0' + strMinute;}
     if (strSecond < TEN) {strSecond = '0' + strSecond;}
     limitStr = strHour + ":" + strMinute + ":" + strSecond;
-    
+
     // Calculate ms by input.
     remainningTime = limitTime = calcMs(limitHour, limitMinute, limitSecond, ms);
-    currentTime = 0;
+    currentTime = ZERO;
     finishTime = Date.now() + limitTime;
 }
 
-function calcMs(hr, min, sec, ms) {
-    let tmpTime = 1000 * (60 * (60 * hr + min) + sec) + ms;
+function calcMs (hr, min, sec, ms) {
+    const tmpTime = MS_PER_SECOND * (SECOND_PER_MINUTE * (MINUTE_PER_HOUR * hr + min) + sec) + ms;
     return tmpTime;
 }
 
-function calcHMS(tmpTime) {
-    let arr = new Array(4);
-    arr[3] = tmpTime % 1000;
-    tmpTime = parseInt(tmpTime / 1000);
-    arr[2] = tmpTime % 60;
-    tmpTime = parseInt(tmpTime / 60);
-    arr[1] = tmpTime % 60;
-    arr[0] = parseInt(tmpTime / 60);
+function calcHMS (tmpTime) {
+    const arr = new Array(ARR_SIZE);
+    arr[THREE] = tmpTime % MS_PER_SECOND;
+    tmpTime = parseInt(tmpTime / MS_PER_SECOND);
+    arr[TWO] = tmpTime % SECOND_PER_MINUTE;
+    tmpTime = parseInt(tmpTime / SECOND_PER_MINUTE);
+    arr[ONE] = tmpTime % MINUTE_PER_HOUR;
+    arr[ZERO] = parseInt(tmpTime / MINUTE_PER_HOUR);
     // console.log(arr);
     return arr;
 }
 
-function updateTime() {
-    let timeNow = Date.now();
+function updateTime () {
+    const timeNow = Date.now();
     remainningTime = finishTime - timeNow;
-    if (remainningTime < 0)
+    if (remainningTime < ZERO)
     {
         isFinished = true;
         hideObj("resume");
         hideObj("pause");
         clearInterval(timeObj);
         if (isDownTiming)
-            timeInfo.innerText = "倒计时 " + limitStr + " 已结束";
+            {timeInfo.innerText = "倒计时 " + limitStr + " 已结束";}
         else
-            timeInfo.innerText = "正计时 " + limitStr + " 已结束";
-        remainningTime = 0;
+            {timeInfo.innerText = "正计时 " + limitStr + " 已结束";}
+        remainningTime = ZERO;
     }
     currentTime = limitTime - remainningTime;
     // console.log(remainningTime, currentTime);
     if (isDownTiming)
     {
-        let tmpArr = calcHMS(remainningTime);
-        hour = tmpArr[0];
-        minute = tmpArr[1];
-        second = tmpArr[2];
-        ms = tmpArr[3];
+        const tmpArr = calcHMS(remainningTime);
+        hour = tmpArr[ZERO];
+        minute = tmpArr[ONE];
+        second = tmpArr[TWO];
+        ms = tmpArr[THREE];
     }
     else
     {
-        let tmpArr = calcHMS(currentTime);
-        hour = tmpArr[0];
-        minute = tmpArr[1];
-        second = tmpArr[2];
-        ms = tmpArr[3];
+        const tmpArr = calcHMS(currentTime);
+        hour = tmpArr[ZERO];
+        minute = tmpArr[ONE];
+        second = tmpArr[TWO];
+        ms = tmpArr[THREE];
     }
     printToClock();
 }
