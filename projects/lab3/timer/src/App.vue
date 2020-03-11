@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <timer-header @plus-hour="plusHour">
+    <timer-header
+      @update-time="updateLimitTime">
     </timer-header>
     <!-- <router-view/> -->
     <timer-body :clock-str="clockStr">
@@ -17,9 +18,19 @@ export default {
   name: 'App',
   data: function () {
     return {
+      limitHour: 0,
+      limitMinute: 0,
+      limitSecond: 0,
       hour: 23,
       minute: 59,
       second: 59
+    }
+  },
+  watch: {
+    hour: function (val) {
+      if (val === 1) {
+        this.$emit('cao', 'aaaooee')
+      }
     }
   },
   computed: {
@@ -40,8 +51,28 @@ export default {
     TimerBody
   },
   methods: {
-    plusHour: function () {
-      this.hour += 1
+    updateLimitTime: function (inputHour, inputMinute, inputSecond) {
+      if (isNaN(inputHour)) inputHour = 0
+      if (inputHour > 99) inputHour = 99
+      else if (inputHour < 0) inputHour = 0
+      this.limitHour = inputHour
+
+      if (isNaN(inputMinute)) inputMinute = 0
+      if (inputMinute > 59) inputMinute = 59
+      else if (inputMinute < 0) inputMinute = 0
+      this.limitMinute = inputMinute
+
+      if (isNaN(inputSecond)) inputSecond = 0
+      if (inputSecond > 59) inputSecond = 59
+      else if (inputSecond < 0) inputSecond = 0
+      this.limitSecond = inputSecond
+
+      this.updateTime()
+    },
+    updateTime: function () {
+      this.hour = this.limitHour
+      this.minute = this.limitMinute
+      this.second = this.limitSecond
     }
   }
 }

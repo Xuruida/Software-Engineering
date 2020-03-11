@@ -1,17 +1,19 @@
 <template>
-  <div>
-    <button :class="'button ' + color" :style="'float: ' + position" @click="plusNumber"><slot></slot></button>
+  <div class="button_div">
+    <button
+      :class="'button ' + color"
+      :style="'float: ' + position"
+      @click="updateTime">
+      <slot></slot>
+    </button>
   </div>
 </template>
 
 <script>
-import App from '@/App'
 export default {
   name: 'Button',
   data: function () {
     return {
-      test: App.data(),
-      num: 0
     }
   },
   props: {
@@ -19,20 +21,24 @@ export default {
     position: String
   },
   methods: {
-    plusNumber: function () {
-      this.$emit('plus-test')
+    updateTime: function () {
+      this.$emit('click')
     }
-  },
-  component: App
+  }
 }
 </script>
 
 <style scoped>
+.button_div {
+  display: inline;
+}
+
 .button {
   border: none;
   border-radius: 5px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   color: #fff;
+  display: inline-block;
   font-family: PingFangSC-Regular, 'PingFang SC', sans-serif;
   font-size: 16px;
   font-weight: 300;
