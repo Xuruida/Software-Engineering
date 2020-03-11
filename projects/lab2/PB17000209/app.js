@@ -10,7 +10,7 @@ const MAX_MINUTE = 59;
 const MAX_SECOND = 59;
 const MAX_HOUR = 99;
 const MAX_MS = 900;
-const INTERVAL = 100;
+const INTERVAL = 53;
 const TEN = 10;
 let hour = ZERO, minute = ZERO, second = ZERO, ms = ZERO;
 let isFinished = false;
@@ -22,18 +22,8 @@ const inputHour = document.getElementById("hour");
 const inputMinute = document.getElementById("minute");
 const inputSecond = document.getElementById("second");
 let limitStr, limitHour, limitMinute, limitSecond;
-inputHour.oninput = inputMinute.oninput = inputSecond.oninput = showTextTime;
+let remainningTime, limitTime, finishTime, currentTime;
 
-// Show while changing text
-function showTextTime () {
-    if (timeObj === null) {
-        getInputInfo();
-        // printToClock();
-    }
-    // alert("Changing text");
-}
-
-//
 function changeDisplayAttr (countdown, countup, resume, pause,
     clear, restart, inputBlock, hint, hintText) {
     if (countdown === true) {showObj("countdown");}
@@ -94,12 +84,12 @@ function countupBtnClick () {
     if (timeObj === null) {
         isCleared = false;
         isFinished = false;
+        isDownTiming = false;
         getInputInfo();
         hour = minute = second = ms = ZERO;
-        printToClock();
-        isDownTiming = false;
         changeDisplayAttr(false, false, false, true, true, true, false, true, "正在正计时 " + limitStr);
-        timeObj = setInterval(upTiming, INTERVAL);
+        updateTime();
+        timeObj = setInterval(updateTime, INTERVAL);
     }
 }
 
@@ -109,15 +99,15 @@ function countdownBtnClick () {
     if (timeObj === null) {
         isCleared = false;
         isFinished = false;
+        isDownTiming = true;
         /* Get input info: */
         getInputInfo();
-        if (downTiming() === true) {
-            ms = MAX_MS + INTERVAL;
-        }
-        printToClock();
-        isDownTiming = true;
         changeDisplayAttr(false, false, false, true, true, true, false, true, "正在倒计时 " + limitStr);
-        timeObj = setInterval(downTiming, INTERVAL);
+        setTimeout(() => {
+            updateTime();
+            timeObj = setInterval(updateTime, INTERVAL);
+        }
+        , 1);
     }
 }
 
@@ -137,6 +127,7 @@ function clearBtnClick () {
 resumeBtn.onclick = resumeBtnClick;
 function resumeBtnClick () {
     if (timeObj === null) {
+        finishTime = remainningTime + Date.now();
         let tmpStr;
         if (isDownTiming)
             {tmpStr = "正在倒计时 " + limitStr;}
@@ -144,9 +135,9 @@ function resumeBtnClick () {
             {tmpStr = "正在正计时 " + limitStr;}
         changeDisplayAttr(false, false, false, true, true, true, false, true, tmpStr);
         if (isDownTiming)
-            {timeObj = setInterval(downTiming, INTERVAL);}
+            {timeObj = setInterval(updateTime, INTERVAL);}
         else
-            {timeObj = setInterval(upTiming, INTERVAL);}
+            {timeObj = setInterval(updateTime, INTERVAL);}
     }
 }
 
@@ -172,27 +163,22 @@ function restartBtnClick () {
         timeObj = null;
     }
     isFinished = false;
+    finishTime = limitTime + Date.now();
     let tmpStr;
     if (!isDownTiming)
         {tmpStr = "正在正计时 " + limitStr;}
     else
         {tmpStr = "正在倒计时 " + limitStr;}
     changeDisplayAttr(false, false, false, true, true, true, false, true, tmpStr);
-    printToClock();
     if (isDownTiming) {
-        hour = limitHour;
-        minute = limitMinute;
-        second = limitSecond;
-        ms = ZERO;
-        if (downTiming() === true) {
-            ms = MAX_MS + INTERVAL;
-        }
-        printToClock();
-        timeObj = setInterval(downTiming, INTERVAL);
+        setTimeout(() => {
+            updateTime();
+            timeObj = setInterval(updateTime, INTERVAL);
+        }, 1);
     }
     else {
         hour = minute = second = ms = ZERO;
-        timeObj = setInterval(upTiming, INTERVAL);
+        timeObj = setInterval(updateTime, INTERVAL);
     }
 }
 
@@ -242,60 +228,64 @@ function getInputInfo () {
     if (strMinute < TEN) {strMinute = '0' + strMinute;}
     if (strSecond < TEN) {strSecond = '0' + strSecond;}
     limitStr = strHour + ":" + strMinute + ":" + strSecond;
+    
+    // Calculate ms by input.
+    remainningTime = limitTime = calcMs(limitHour, limitMinute, limitSecond, ms);
+    currentTime = 0;
+    finishTime = Date.now() + limitTime;
 }
 
-function upTiming () {
-    if (hour === limitHour && minute === limitMinute && second === limitSecond && ms === ZERO) {
+function calcMs(hr, min, sec, ms) {
+    let tmpTime = 1000 * (60 * (60 * hr + min) + sec) + ms;
+    return tmpTime;
+}
+
+function calcHMS(tmpTime) {
+    let arr = new Array(4);
+    arr[3] = tmpTime % 1000;
+    tmpTime = parseInt(tmpTime / 1000);
+    arr[2] = tmpTime % 60;
+    tmpTime = parseInt(tmpTime / 60);
+    arr[1] = tmpTime % 60;
+    arr[0] = parseInt(tmpTime / 60);
+    // console.log(arr);
+    return arr;
+}
+
+function updateTime() {
+    let timeNow = Date.now();
+    remainningTime = finishTime - timeNow;
+    if (remainningTime < 0)
+    {
         isFinished = true;
         hideObj("resume");
         hideObj("pause");
         clearInterval(timeObj);
-        timeInfo.innerText = "正计时 " + limitStr + " 已结束";
-        printToClock();
-        return true;
+        if (isDownTiming)
+            timeInfo.innerText = "倒计时 " + limitStr + " 已结束";
+        else
+            timeInfo.innerText = "正计时 " + limitStr + " 已结束";
+        remainningTime = 0;
     }
-    ms += INTERVAL;
-    if (ms > MAX_MS) {
-        ms = ZERO;
-        second++;
+    currentTime = limitTime - remainningTime;
+    // console.log(remainningTime, currentTime);
+    if (isDownTiming)
+    {
+        let tmpArr = calcHMS(remainningTime);
+        hour = tmpArr[0];
+        minute = tmpArr[1];
+        second = tmpArr[2];
+        ms = tmpArr[3];
     }
-    if (second > MAX_SECOND) {
-        second = ZERO;
-        minute++;
-    }
-    if (minute > MAX_MINUTE) {
-        minute = ZERO;
-        hour++;
-    }
-    printToClock();
-    return true;
-}
-
-function downTiming () {
-    if (second === ZERO && minute === ZERO && hour === ZERO && ms === ZERO) {
-        isFinished = true;
-        hideObj("resume");
-        hideObj("pause");
-        clearInterval(timeObj);
-        timeInfo.innerText = "倒计时 " + limitStr + " 已结束";
-        printToClock();
-        return false;
-    }
-    ms -= INTERVAL;
-    if (ms < ZERO) {
-        ms = MAX_MS;
-        second--;
-    }
-    if (second < ZERO) {
-        second = MAX_SECOND;
-        minute--;
-    }
-    if (minute < ZERO) {
-        minute = MAX_MINUTE;
-        hour--;
+    else
+    {
+        let tmpArr = calcHMS(currentTime);
+        hour = tmpArr[0];
+        minute = tmpArr[1];
+        second = tmpArr[2];
+        ms = tmpArr[3];
     }
     printToClock();
-    return true;
 }
 
 let clockStr;
