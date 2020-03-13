@@ -86,6 +86,10 @@ export default {
     }
   },
   props: {
+    keyboardUpTiming: {
+      type: Boolean,
+      defalut: true
+    },
     isChangedDisplay: {
       type: Boolean,
       default: false
@@ -125,6 +129,12 @@ export default {
             else this.changeDisplay(6)
           }
         }
+      }
+    },
+    keyboardUpTiming: {
+      handler: function (val) {
+        console.log('KbdUpTiming Changed!')
+        this.startUpTiming()
       }
     }
   },

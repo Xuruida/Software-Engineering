@@ -9,6 +9,8 @@
       @resume-timing="resumeTiming"
       @restart-timing="restartTiming"
       @clear-timing="clearTiming"
+      @keydown.enter="testMethod"
+      :keyboard-up-timing="keyboardUpTiming"
       :limit-str="limitStr"
       :is-started="isStarted"
       :is-finished="isFinished"
@@ -44,7 +46,8 @@ export default {
       isFinished: false,
       isDownTiming: true,
       isPaused: false,
-      isChangedDisplay: false
+      isChangedDisplay: false,
+      keyboardUpTiming: true
     }
   },
   computed: {
@@ -64,6 +67,26 @@ export default {
     TimerButton,
     TimerBody
   },
+  mounted: function () {
+    let that = this
+    let enableKeyboard = true
+    document.onkeydown = function (event) {
+      if (enableKeyboard) {
+        enableKeyboard = false
+        console.log('press ' + event.keyCode + '; enable = ' + enableKeyboard)
+        if (event.keyCode === 13) {
+          if (!that.isStarted) that.keyboardUpTiming = !that.keyboardUpTiming
+        } else if (event.keyCode === 32) {
+          if (!that.isPaused) that.pauseTiming()
+          else that.resumeTiming()
+        }
+      }
+    }
+    document.onkeyup = function (event) {
+      enableKeyboard = true
+      console.log('enabled keyboard')
+    }
+  },
   methods: {
     updateLimitTime: function (inputHour, inputMinute, inputSecond) {
       this.getInputInfo(inputHour, inputMinute, inputSecond)
@@ -76,13 +99,13 @@ export default {
     updateTime: function () {
       const timeNow = Date.now()
       this.remainningTime = this.finishTime - timeNow
-      const currentTime = this.limitTime - this.remainningTime
       if (this.remainningTime < 0) {
         clearInterval(timeObj)
         timeObj = null
         this.remainningTime = 0
         this.changeDisplay(true, true, this.isDownTiming, false)
       }
+      const currentTime = this.limitTime - this.remainningTime
       if (this.isDownTiming) {
         const tmpArr = calcHMS(this.remainningTime)
         this.hour = tmpArr[0]
@@ -165,6 +188,7 @@ export default {
     pauseTiming: function () {
       if (timeObj !== null) {
         this.changeDisplay(true, false, this.isDownTiming, true)
+        this.updateTime()
         clearInterval(timeObj)
         timeObj = null
       }
@@ -198,6 +222,10 @@ export default {
       }
       this.changeDisplay(false, false, true, false)
       this.hour = this.minute = this.second = this.ms = 0
+    },
+
+    testMethod: function () {
+      console.log('Enter is pressed')
     }
   }
 }
