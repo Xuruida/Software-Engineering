@@ -158,6 +158,7 @@ function pauseBtnClick () {
         else
             {tmpStr = "暂停正计时 " + limitStr;}
         changeDisplayAttr(false, false, true, false, true, true, false, true, tmpStr);
+        updateTime();
         clearInterval(timeObj);
         timeObj = null;
     }
